@@ -1,0 +1,18 @@
+programa
+inteiro var1, var2;
+escreva("Escreva um numero: ");
+leia(var1);
+var2 = 1;
+se(1<1){
+    enquanto(var1 > 1){
+        var2 = var1 / var2 * 1 + 2;
+        var1 = var1 - 1;
+     }
+}
+enquanto(2>1){
+    escreva("a");
+}
+escreva("fatorial de: ");
+escreva(var1);
+escreva("\n");
+fimprograma
