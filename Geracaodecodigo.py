@@ -24,7 +24,7 @@ def intemerdiario(token,args, inicio, fim, loop,condicional, texto):
             L=L+i
             C=L
         elif 'se' == token[i][0]:
-            texto.append(f'_C{C} if {token[i+2][1]} {token[i+3][1]} {token[i+4][1]} goto _C{C+1}')
+            texto.append(f'_C{C}: if {token[i+2][1]}' + (' >' if '<' in token[i+3][1] else ' <')+f' {token[i+4][1]} goto _C{C+1}')
             i=intemerdiario(token, args, i+6, fim, L, C+1, texto)
             texto.append(f'_C{L+1}:')
             C = C + i

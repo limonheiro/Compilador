@@ -3,7 +3,7 @@ INTEIRO var2
 ESCREVA "Escreva um numero: "
 LEIA var1
 var2 := 1
-_C0 if 1 < 1 goto _C1
+_C0: if 1 > 1 goto _C1
 _L0: if var1 < 1 goto _L1 
 T1 := var1 var2 /
 T2 := T1 1 *
