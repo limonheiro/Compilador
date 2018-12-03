@@ -40,9 +40,5 @@ def lse(token,args):
     from semantico import semantico
     semantico(token,args)
 def lgc(token,args):
-    from  Geracaodecodigo import intemerdiario
-    texto = []
-    intemerdiario(token,args,0,len(token),0,0, texto)
-    '''
-    intermediario(token, args, posicao inicial que deseja converter para assembler, posição final, valor inicial das Labels dos loops, valor inicial das Labels dos condicionais)
-    '''
+    from  Geracaodecodigo import gerarcodigo
+    gerarcodigo(token,args)

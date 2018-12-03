@@ -35,7 +35,6 @@ def intemerdiario(token,args, inicio, fim, loop,condicional, texto):
 
     with open('intermediario.s','w') as f:
         f.write('\n'.join(texto))
-    #print (texto)
 def simpleexpre(exp,var,texto):
     '''
     ADD dest,src1,src2	dest = src1 + src2
@@ -78,3 +77,48 @@ def variaveis(token,i):
             var.append('INTEIRO '+token[l][1])
         l+=1
     return var
+def gerarcodigo(token,args):
+    texto=[]
+    '''
+    intermediario(token, args, posicao inicial que deseja converter para assembler, posição final, valor inicial das Labels dos loops, valor inicial das Labels dos condicionais)
+    '''
+    intemerdiario(token, args, 0, len(token), 0, 0, texto)
+    gerar()
+def gerar():
+    texto=[]
+    with open('intermediario.s','r') as f:
+        texto=f.readlines()
+    i=0
+    final=[]
+    db=[]
+    msg=-1
+    final.append('format ELF64 executable 3')
+    final.append('segment readable executable')
+    final.append('entry main')
+    final.append('main:')
+
+    while i < len(texto):
+        if 'ESCREVA' in texto[i]:
+            if '"' in texto[i]:
+                msg += 1
+                size = texto[i].strip('ESCREVA')
+                size = size.strip('\n').replace('"','')
+                final.append(f'lea rdi, [msg{msg}]')
+                final.append(f'mov rax, {len(size)}')
+                final.append(f'mov rdx, rax')
+                final.append(f'mov rsi, rdi')
+                final.append(f'mov rdi, 1')
+                final.append(f'mov rax, 1')
+                final.append(f'syscall')
+                db.extend([f'msg{msg} db \'{size.strip()}\', 10,0'])
+            else:
+                print ()
+        i+=1
+    final.append('xor rdi,rdi')
+    final.append('mov rax, 60')
+    final.append('syscall')
+    if(msg>-1):
+        final.append('segment readable writable')
+        final.extend(db)
+    with open('final.fasm','w') as f:
+        f.write('\n'.join(final))
