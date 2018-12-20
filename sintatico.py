@@ -1,4 +1,4 @@
-def analisadorsintatico(dict1, dict2, programa, args):
+def analisadorsintatico(dict1, dict2, programa, args,erro):
     pilha = ["<INICIO>"]#inicializa a pilha com o Não terminal inicial
     if args.ls : #Se verdadeiro mostra a mensagem a seguir
         print ('#'*80)
@@ -48,17 +48,10 @@ def analisadorsintatico(dict1, dict2, programa, args):
                 else:
                     # se top não for um não terminal ele apenas adciona o topo da pilha
                     a.extend(token[pilha[-1]])
-                from colorama import Fore, Style
-                t = Fore.CYAN +"Erro Sintatico ".upper()#imprimi bunitinho
-                print(t)
-                print(f"\'{programa[i][1]}\' inesperado linha {programa[i][2]}, coluna {programa[i][3]}")#
-                space = " "*int(programa[i][3])
-                texto = []
-                with open(args.filename, 'r') as f:
-                    for i in range(programa[i][2]):
-                        texto = f.readline()
-                print(texto+space+'^')
-                print(f"Era esperado: {' '.join(a)}"+Style.RESET_ALL)
+                erro.append('########################################################')
+                erro.append('Erro sintático')
+                erro.append(f"\'{programa[i-1][1]}\' inesperado linha {programa[i-1][2]}, coluna {programa[i-1][3]}")#
+                erro.append(f"Era esperado: {' '.join(a)}")
                 args.ls = False
                 break
     if args.ls:#Se for True imprime a mensagem

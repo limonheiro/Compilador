@@ -1,19 +1,49 @@
-def semantico(token, args):
-    Avariaveis(token, args)
-def divisao(token, args, lista):
+def semantico(token, args, erro):
+    Avariaveis(token, args,erro)
+def divisao(token, args, lista,erro):
     linha = []
+    i=0
     if args.lse:
         print("Verificando Divisão por Zero.")
-
-def verificando(lista):
-    for exp in lista.values():
-        if 'î' not in exp:
+    while (i < len(token)):
+        if 'recebe' in token[i][0]:
+            j=i+1
+            variavel = token[i-1][1]
             try:
-                eval(''.join(exp))
-            except ZeroDivisionError:
-                from colorama import Style
-                Color()
-                print (f' Divisão por Zero {exp} '+ Style.RESET_ALL)
+                while not 'fim_linha' in token[j][0]:
+                    if (str(token[j][1][0])).isdigit():
+                        linha.append(str(token[j][1][0]))
+                    else:
+                        linha.append(token[j][1])
+                    j+=1
+            except IndexError:
+                break
+            if verificando(variavel, linha, lista, erro):
+                erro.append(f'linha:{token[i][2]}')
+            linha.clear()
+        i+=1
+
+def verificando(variavel, linha, lista,erro):
+    i=0
+    antigo=''.join(linha)
+    while i<len(linha):
+        if linha[i].isidentifier:
+            if linha[i] in lista:
+                linha[i]=lista[linha[i]]
+            else:
+                pass
+        i+=1
+    try:
+        expre=''.join(linha)
+        eval(expre)
+    except ZeroDivisionError:
+        erro.append('########################################################')
+        erro.append('Erro semantico:')
+        erro.append(f'Divisão por Zero {antigo}')
+        return 1
+    lista[variavel]=str(eval(''.join(linha)))
+    return 0
+
 def trocandoValores(lista,a,key):
     import re
     for exp in lista.keys():
@@ -21,7 +51,7 @@ def trocandoValores(lista,a,key):
             a=re.sub(r''+exp, (''.join(lista[exp])),''.join(a))
     lista[key] = ''.join(a)
 
-def Avariaveis(token, args):
+def Avariaveis(token, args,erro):
     variaveis = {}
     if args.lse:
         print ('#' * 80)
@@ -30,10 +60,11 @@ def Avariaveis(token, args):
     for var in token:
         if 'id' in var and var[2] == 2:
             if var[1] not in variaveis:
-                variaveis[var[1]] = 'î'
+                variaveis[var[1]] = '0'
             else:
-                Color()
-                print(f'\'{var[1]}\' declaração duplicada: ' + reset(var))
+                erro.append('########################################################')
+                erro.append('Erro semantico:')
+                erro.append(f'\'{var[1]}\' declaração duplicada: ')
 
     if args.lse:
         print("Variaveis declaradas: ")
@@ -44,15 +75,7 @@ def Avariaveis(token, args):
     for code in token:
         if 'id' in code:
             if not (code[1] in variaveis):
-                Color();
-                print(f'Variavel \'{code[1]}\' não declarado: ' + reset(code))
-    divisao(token, args, variaveis)
-
-def Color():
-    from colorama import Fore, Back
-    print(Fore.CYAN + 'Erro semantico:')
-
-
-def reset(linha):
-    from colorama import Style
-    return f'linha{linha[2]} : coluna{linha[3]}' + Style.RESET_ALL
+                erro.append('########################################################')
+                erro.append('Erro semantico:')
+                erro.append(f'Variavel \'{code[1]}\' não declarado: linha{code[2]} : coluna{code[3]}')
+    divisao(token, args, variaveis, erro)

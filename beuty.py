@@ -27,7 +27,7 @@ def separar(palavra):
             numero += word
     return (''.join(numero))
 
-def initsintatico(token, args):
+def initsintatico(token, args,erro):
     import os
     if not(os.path.isfile('dicionario1.dtc')and os.path.isfile('dicionario2.dtc')):
         save()
@@ -35,7 +35,7 @@ def initsintatico(token, args):
     from sintatico import analisadorsintatico
     dict_tabela1 = load("dicionario1.dtc")
     dict_tabela2 = load("dicionario2.dtc")
-    analisadorsintatico(dict_tabela1, dict_tabela2, token, args)
+    analisadorsintatico(dict_tabela1, dict_tabela2, token, args,erro)
 
 def load(filename):
     import pickle

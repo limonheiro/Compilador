@@ -1,6 +1,6 @@
 import collections
 import re
-def tokenize(code,args):
+def tokenize(code,args,erro):
     token = collections.namedtuple('Token', ['tipo', 'lexema', 'linha', 'coluna'])
     token_especificacao = [
         ('inicio'       ,r'\{'), #inicio {
@@ -9,8 +9,8 @@ def tokenize(code,args):
         ('f_parentese'  ,r'\)'), #parentese de fechamento
         ('leia'         ,r'leia'), #leia
         ('escreva'      ,r'escreva'), #escreva
+        ('senao', r'senao'),  # senao
         ('se'           ,r'se'), #se
-        ('senao'        ,r'senao'), #senao
         ('enquanto'     ,r'enquanto'), #enquanto
         ('programa'     ,r'programa'), #programa
         ('fimprograma'  ,r'fimprograma'), #fimprograma
@@ -44,20 +44,15 @@ def tokenize(code,args):
         elif tipo == 'tab':
             pass
         elif tipo == 'ERRO':
-
-            from colorama import Fore, Style
-            t=Fore.CYAN+'########################################################'
-            print(t)
-            print(f'{valor!r} não esperado na linha {linha} e coluna {coluna}\a\a')
-            print(t)
-            print(f'Erro lexico')
-            args.lt=False
+            erro.append('########################################################')
+            erro.append(f'Erro lexico')
+            erro.append(f'{valor!r} não esperado na linha {linha} e coluna {coluna}')
             if valor == '"':
-                print(f'" de fechamento não encontrada'+Style.RESET_ALL)
+                erro.append(f'" de fechamento não encontrada')
             else:
-                print(f'caracter desconhecido')
-                print(Style.RESET_ALL)
+                erro.append(f'caracter desconhecido')
             pass
+
         coluna = mo.start() - linha_inicia
         if (tipo != 'ERRO') and (tipo != 'Linha') and (tipo != 'WS'):
             yield token(tipo, valor, linha, coluna)
